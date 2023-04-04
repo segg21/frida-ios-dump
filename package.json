@@ -1,0 +1,12 @@
+{
+  "name": "frida-ios-dump",
+  "version": "1.0.0",
+  "description": "pull decrypted ipa from jailbreak device",
+  "private": true,
+  "main": "dump.js",
+  "devDependencies": {
+    "@types/frida-gum": "^18.1.0",
+    "@types/node": "^18.0.6",
+    "frida-compile": "^15.0.8"
+  }
+}

@@ -6,22 +6,22 @@
 
 from __future__ import print_function
 from __future__ import unicode_literals
-import sys
-import codecs
-import frida
-import threading
-import os
-import shutil
-import time
+
 import argparse
-import tempfile
-import subprocess
+import codecs
+import os
 import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import threading
+import traceback
+
+import frida
 import paramiko
-from paramiko import SSHClient
 from scp import SCPClient
 from tqdm import tqdm
-import traceback
 
 IS_PY2 = sys.version_info[0] < 3
 if IS_PY2:
@@ -93,8 +93,9 @@ def generate_ipa(path, display_name):
         print(e)
         finished.set()
 
+
 def on_message(message, data):
-    t = tqdm(unit='B',unit_scale=True,unit_divisor=1024,miniters=1)
+    t = tqdm(unit='B', unit_scale=True, unit_divisor=1024, miniters=1)
     last_sent = [0]
 
     def progress(filename, size, sent):
@@ -116,7 +117,7 @@ def on_message(message, data):
             scp_from = dump_path
             scp_to = PAYLOAD_PATH + '/'
 
-            with SCPClient(ssh.get_transport(), progress = progress, socket_timeout = 60) as scp:
+            with SCPClient(ssh.get_transport(), progress=progress, socket_timeout=60) as scp:
                 scp.get(scp_from, scp_to)
 
             chmod_dir = os.path.join(PAYLOAD_PATH, os.path.basename(dump_path))
@@ -134,7 +135,7 @@ def on_message(message, data):
 
             scp_from = app_path
             scp_to = PAYLOAD_PATH + '/'
-            with SCPClient(ssh.get_transport(), progress = progress, socket_timeout = 60) as scp:
+            with SCPClient(ssh.get_transport(), progress=progress, socket_timeout=60) as scp:
                 scp.get(scp_from, scp_to, recursive=True)
 
             chmod_dir = os.path.join(PAYLOAD_PATH, os.path.basename(app_path))
@@ -149,6 +150,7 @@ def on_message(message, data):
         if 'done' in payload:
             finished.set()
     t.close()
+
 
 def compare_applications(a, b):
     a_is_running = a.pid != 0
@@ -194,40 +196,6 @@ def cmp_to_key(mycmp):
     return K
 
 
-def get_applications(device):
-    try:
-        applications = device.enumerate_applications()
-    except Exception as e:
-        sys.exit('Failed to enumerate applications: %s' % e)
-
-    return applications
-
-
-def list_applications(device):
-    applications = get_applications(device)
-
-    if len(applications) > 0:
-        pid_column_width = max(map(lambda app: len('{}'.format(app.pid)), applications))
-        name_column_width = max(map(lambda app: len(app.name), applications))
-        identifier_column_width = max(map(lambda app: len(app.identifier), applications))
-    else:
-        pid_column_width = 0
-        name_column_width = 0
-        identifier_column_width = 0
-
-    header_format = '%' + str(pid_column_width) + 's  ' + '%-' + str(name_column_width) + 's  ' + '%-' + str(
-        identifier_column_width) + 's'
-    print(header_format % ('PID', 'Name', 'Identifier'))
-    print('%s  %s  %s' % (pid_column_width * '-', name_column_width * '-', identifier_column_width * '-'))
-    line_format = '%' + str(pid_column_width) + 's  ' + '%-' + str(name_column_width) + 's  ' + '%-' + str(
-        identifier_column_width) + 's'
-    for application in sorted(applications, key=cmp_to_key(compare_applications)):
-        if application.pid == 0:
-            print(line_format % ('-', application.name, application.identifier))
-        else:
-            print(line_format % (application.pid, application.name, application.identifier))
-
-
 def load_js_file(session, filename):
     source = ''
     with codecs.open(filename, 'r', 'utf-8') as f:
@@ -250,18 +218,13 @@ def create_dir(path):
         print(err)
 
 
-def open_target_app(device, name_or_bundleid):
-    print('Start the target app {}'.format(name_or_bundleid))
+def open_target_app(device, name):
+    print('Start the target app {}'.format(name))
 
-    pid = ''
+    pid = device.get_process(name).pid
     session = None
-    display_name = ''
+    display_name = name
     bundle_identifier = ''
-    for application in get_applications(device):
-        if name_or_bundleid == application.identifier or name_or_bundleid == application.name:
-            pid = application.pid
-            display_name = application.name
-            bundle_identifier = application.identifier
 
     try:
         if not pid:
@@ -269,9 +232,9 @@ def open_target_app(device, name_or_bundleid):
             session = device.attach(pid)
             device.resume(pid)
         else:
-            session = device.attach(pid)
+            session = device.attach(pid, realm="native")
     except Exception as e:
-        print(e) 
+        print(e)
 
     return session, display_name, bundle_identifier
 
@@ -289,16 +252,42 @@ def start_dump(session, ipa_name):
         session.detach()
 
 
+def trim_icon(icon):
+    result = dict(icon)
+    result["image"] = result["image"][0:16] + b"..."
+    return result
+
+
+def list_processes(device):
+    processes = device.enumerate_processes(scope="full")
+    for proc in processes:
+        params = dict(proc.parameters)
+        if "icons" in params:
+            params["icons"] = [trim_icon(icon) for icon in params["icons"]]
+        print(
+            f'Process(\n'
+            f'  pid={proc.pid},\n'
+            f'  name="{proc.name}",\n'
+            f'  parameters={{\n'
+            f'    "path": "{params["path"]}",\n'
+            f'    "user": "{params["user"]}",\n'
+            f'    "ppid": {params["ppid"]},\n'
+            f'    "started": {params["started"]}\n'
+            f'  }}\n'
+            f')'
+        )
+
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='frida-ios-dump (by AloneMonkey v2.0)')
-    parser.add_argument('-l', '--list', dest='list_applications', action='store_true', help='List the installed apps')
+    parser = argparse.ArgumentParser(description='frida-ios-dump (by AloneMonkey v2.1)')
+    parser.add_argument('-l', '--list', dest='list_processes', action='store_true', help='List running processes')
     parser.add_argument('-o', '--output', dest='output_ipa', help='Specify name of the decrypted IPA')
     parser.add_argument('-H', '--host', dest='ssh_host', help='Specify SSH hostname')
     parser.add_argument('-p', '--port', dest='ssh_port', help='Specify SSH port')
     parser.add_argument('-u', '--user', dest='ssh_user', help='Specify SSH username')
     parser.add_argument('-P', '--password', dest='ssh_password', help='Specify SSH password')
     parser.add_argument('-K', '--key_filename', dest='ssh_key_filename', help='Specify SSH private key file path')
-    parser.add_argument('target', nargs='?', help='Bundle identifier or display name of the target app')
+    parser.add_argument('target', nargs='?', help='Display name of the target app')
 
     args = parser.parse_args()
 
@@ -311,8 +300,8 @@ if __name__ == '__main__':
 
     device = get_usb_iphone()
 
-    if args.list_applications:
-        list_applications(device)
+    if args.list_processes:
+        list_processes(device)
     else:
         name_or_bundleid = args.target
         output_ipa = args.output_ipa

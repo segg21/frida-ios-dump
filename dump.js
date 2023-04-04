@@ -1,13 +1,13 @@
 Module.ensureInitialized('Foundation');
 
-var O_RDONLY = 0;
-var O_WRONLY = 1;
-var O_RDWR = 2;
-var O_CREAT = 512;
+const O_RDONLY = 0;
+const O_WRONLY = 1;
+const O_RDWR = 2;
+const O_CREAT = 512;
 
-var SEEK_SET = 0;
-var SEEK_CUR = 1;
-var SEEK_END = 2;
+const SEEK_SET = 0;
+const SEEK_CUR = 1;
+const SEEK_END = 2;
 
 function allocStr(str) {
     return Memory.allocUtf8String(str);
@@ -129,15 +129,15 @@ function getExportFunction(type, name, ret, args) {
     }
 }
 
-var NSSearchPathForDirectoriesInDomains = getExportFunction("f", "NSSearchPathForDirectoriesInDomains", "pointer", ["int", "int", "int"]);
-var wrapper_open = getExportFunction("f", "open", "int", ["pointer", "int", "int"]);
-var read = getExportFunction("f", "read", "int", ["int", "pointer", "int"]);
-var write = getExportFunction("f", "write", "int", ["int", "pointer", "int"]);
-var lseek = getExportFunction("f", "lseek", "int64", ["int", "int64", "int"]);
-var close = getExportFunction("f", "close", "int", ["int"]);
-var remove = getExportFunction("f", "remove", "int", ["pointer"]);
-var access = getExportFunction("f", "access", "int", ["pointer", "int"]);
-var dlopen = getExportFunction("f", "dlopen", "pointer", ["pointer", "int"]);
+const NSSearchPathForDirectoriesInDomains = getExportFunction("f", "NSSearchPathForDirectoriesInDomains", "pointer", ["int", "int", "int"]);
+const wrapper_open = getExportFunction("f", "open", "int", ["pointer", "int", "int"]);
+const read = getExportFunction("f", "read", "int", ["int", "pointer", "int"]);
+const write = getExportFunction("f", "write", "int", ["int", "pointer", "int"]);
+const lseek = getExportFunction("f", "lseek", "int64", ["int", "int64", "int"]);
+const close = getExportFunction("f", "close", "int", ["int"]);
+const remove = getExportFunction("f", "remove", "int", ["pointer"]);
+const access = getExportFunction("f", "access", "int", ["pointer", "int"]);
+const dlopen = getExportFunction("f", "dlopen", "pointer", ["pointer", "int"]);
 
 function getDocumentDir() {
     var NSDocumentDirectory = 9;
@@ -155,26 +155,26 @@ function open(pathname, flags, mode) {
 
 var modules = null;
 function getAllAppModules() {
-    modules = new Array();
+    modules = [];
     var tmpmods = Process.enumerateModulesSync();
-    for (var i = 0; i < tmpmods.length; i++) {
-        if (tmpmods[i].path.indexOf(".app") != -1) {
-            modules.push(tmpmods[i]);
+    for (const item of tmpmods) {
+        if (item.path.indexOf(".app") !== -1) {
+            modules.push(item);
         }
     }
     return modules;
 }
 
-var FAT_MAGIC = 0xcafebabe;
-var FAT_CIGAM = 0xbebafeca;
-var MH_MAGIC = 0xfeedface;
-var MH_CIGAM = 0xcefaedfe;
-var MH_MAGIC_64 = 0xfeedfacf;
-var MH_CIGAM_64 = 0xcffaedfe;
-var LC_SEGMENT = 0x1;
-var LC_SEGMENT_64 = 0x19;
-var LC_ENCRYPTION_INFO = 0x21;
-var LC_ENCRYPTION_INFO_64 = 0x2C;
+const FAT_MAGIC = 0xcafebabe;
+const FAT_CIGAM = 0xbebafeca;
+const MH_MAGIC = 0xfeedface;
+const MH_CIGAM = 0xcefaedfe;
+const MH_MAGIC_64 = 0xfeedfacf;
+const MH_CIGAM_64 = 0xcffaedfe;
+const LC_SEGMENT = 0x1;
+const LC_SEGMENT_64 = 0x19;
+const LC_ENCRYPTION_INFO = 0x21;
+const LC_ENCRYPTION_INFO_64 = 0x2C;
 
 function pad(str, n) {
     return Array(n-str.length+1).join("0")+str;
@@ -197,7 +197,7 @@ function dumpModule(name) {
 
     var targetmod = null;
     for (var i = 0; i < modules.length; i++) {
-        if (modules[i].path.indexOf(name) != -1) {
+        if (modules[i].path.indexOf(name) !== -1) {
             targetmod = modules[i];
             break;
         }
@@ -220,7 +220,7 @@ function dumpModule(name) {
     var fmodule = open(newmodpath, O_CREAT | O_RDWR, 0);
     var foldmodule = open(oldmodpath, O_RDONLY, 0);
 
-    if (fmodule == -1 || foldmodule == -1) {
+    if (fmodule === -1 || foldmodule === -1) {
         console.log("Cannot open file" + newmodpath);
         return;
     }
@@ -230,10 +230,10 @@ function dumpModule(name) {
     var magic = getU32(modbase);
     var cur_cpu_type = getU32(modbase.add(4));
     var cur_cpu_subtype = getU32(modbase.add(8));
-    if (magic == MH_MAGIC || magic == MH_CIGAM) {
+    if (magic === MH_MAGIC || magic === MH_CIGAM) {
         is64bit = false;
         size_of_mach_header = 28;
-    }else if (magic == MH_MAGIC_64 || magic == MH_CIGAM_64) {
+    }else if (magic === MH_MAGIC_64 || magic === MH_CIGAM_64) {
         is64bit = true;
         size_of_mach_header = 32;
     }
@@ -246,13 +246,13 @@ function dumpModule(name) {
     var fileoffset = 0;
     var filesize = 0;
     magic = getU32(buffer);
-    if(magic == FAT_CIGAM || magic == FAT_MAGIC){
+    if(magic === FAT_CIGAM || magic === FAT_MAGIC){
         var off = 4;
         var archs = swap32(getU32(buffer.add(off)));
         for (var i = 0; i < archs; i++) {
             var cputype = swap32(getU32(buffer.add(off + 4)));
             var cpusubtype = swap32(getU32(buffer.add(off + 8)));
-            if(cur_cpu_type == cputype && cur_cpu_subtype == cpusubtype){
+            if(cur_cpu_type === cputype && cur_cpu_subtype === cpusubtype){
                 fileoffset = swap32(getU32(buffer.add(off + 12)));
                 filesize = swap32(getU32(buffer.add(off + 16)));
                 break;
@@ -260,7 +260,7 @@ function dumpModule(name) {
             off += 20;
         }
 
-        if(fileoffset == 0 || filesize == 0)
+        if(fileoffset === 0 || filesize === 0)
             return;
 
         lseek(fmodule, 0, SEEK_SET);
@@ -291,7 +291,7 @@ function dumpModule(name) {
     for (var i = 0; i < ncmds; i++) {
         var cmd = getU32(modbase.add(off));
         var cmdsize = getU32(modbase.add(off + 4));
-        if (cmd == LC_ENCRYPTION_INFO || cmd == LC_ENCRYPTION_INFO_64) {
+        if (cmd === LC_ENCRYPTION_INFO || cmd === LC_ENCRYPTION_INFO_64) {
             offset_cryptid = off + 16;
             crypt_off = getU32(modbase.add(off + 8));
             crypt_size = getU32(modbase.add(off + 12));
@@ -299,7 +299,7 @@ function dumpModule(name) {
         off += cmdsize;
     }
 
-    if (offset_cryptid != -1) {
+    if (offset_cryptid !== -1) {
         var tpbuf = malloc(8);
         putU64(tpbuf, 0);
         lseek(fmodule, offset_cryptid, SEEK_SET);
@@ -339,18 +339,18 @@ function loadAllDynamicLibrary(app_path) {
                    file_name.hasSuffix_(".app") ||
                    file_name.hasSuffix_(".lproj") ||
                    file_name.hasSuffix_(".storyboardc")) {
-            continue;
+
         } else {
             var isDirPtr = Memory.alloc(Process.pointerSize);
             Memory.writePointer(isDirPtr,NULL);
             defaultManager.fileExistsAtPath_isDirectory_(file_path, isDirPtr);
-            if (Memory.readPointer(isDirPtr) == 1) {
+            if (Memory.readPointer(isDirPtr) === 1) {
                 loadAllDynamicLibrary(file_path);
             } else {
                 if (file_name.hasSuffix_(".dylib")) {
                     var is_loaded = 0;
                     for (var j = 0; j < modules.length; j++) {
-                        if (modules[j].path.indexOf(file_name) != -1) {
+                        if (modules[j].path.indexOf(file_name) !== -1) {
                             is_loaded = 1;
                             console.log("[frida-ios-dump]: " + file_name + " has been dlopen.");
                             break;
