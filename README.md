@@ -14,7 +14,7 @@ A tool to extract a decrypted IPA from a jailbroken, **rootless** device.
    Then, run the following commands as **root** either over SSH or in a terminal window:
    ```shell
    curl -LO --output-dir /var/tmp/ 'https://raw.githubusercontent.com/miticollo/frida-ios-dump/master/scp.entitlements'
-   ldid -S/var/tmp/scp.entitlements "$(which scp)"
+   ldid -S/var/tmp/scp.entitlements -M "$(which scp)"
    rm -v /var/tmp/scp.entitlements
    ```
    <span><!-- https://discord.com/channels/349243932447604736/1082886572011180053/1092577566008807494 --></span>
@@ -27,12 +27,11 @@ For SSH/SCP, make sure to add your public key to the `~/.ssh/authorized_keys` fi
 ./dump.py Spotify 
 Start the target app Spotify
 Dumping Spotify to /var/folders/q2/x23bcyr53w3dnmlh2fqjp2mr0000gp/T
-[frida-ios-dump]: SpotifyShared.framework has been loaded. 
-start dump /private/var/containers/Bundle/Application/64798BA1-EBD8-4090-9AF7-4CAC093B450B/Spotify.app/Spotify
-Spotify.fid: 100%|██████████| 112M/112M [00:03<00:00, 34.3MB/s]
-0.00B [00:00, ?B/s]start dump /private/var/containers/Bundle/Application/64798BA1-EBD8-4090-9AF7-4CAC093B450B/Spotify.app/Frameworks/SpotifyShared.framework/SpotifyShared
-SpotifyShared.fid: 100%|██████████| 4.26M/4.26M [00:00<00:00, 19.7MB/s]
-AppIntentVocabulary.plist: 125MB [00:09, 13.9MB/s]
+start dump /private/var/containers/Bundle/Application/56AE666E-0F06-4969-91C8-5B63F33ECF58/Spotify.app/Spotify
+Spotify.fid: 100%|██████████| 112M/112M [00:03<00:00, 35.5MB/s]
+start dump /private/var/containers/Bundle/Application/56AE666E-0F06-4969-91C8-5B63F33ECF58/Spotify.app/Frameworks/SpotifyShared.framework/SpotifyShared
+SpotifyShared.fid: 100%|██████████| 4.26M/4.26M [00:00<00:00, 19.8MB/s]
+AppIntentVocabulary.plist: 125MB [00:10, 13.1MB/s]
 Generating "Spotify.ipa"
 0.00B [00:00, ?B/s]
 ```
