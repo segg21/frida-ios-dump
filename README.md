@@ -10,7 +10,7 @@ A tool to extract a decrypted IPA from a jailbroken, **rootless** device.
      Refer to the dedicated [gist](https://gist.github.com/miticollo/6e65b59d83b17bacc00523a0f9d41c11) for more information.
 2. Run `sudo pip install -r requirements.txt --upgrade`
 3. Use `iproxy` to enable SSH forwarding over USB (e.g. `iproxy -ddd 2222:22`).
-4. On the device, install `curl` and `ldid` from Procursus. 
+4. On the device, install `curl`, `ldid` and `openssh` from Procursus. 
    Then, run the following commands as **root** either over SSH or in a terminal window:
    ```shell
    curl -LO --output-dir /var/tmp/ 'https://raw.githubusercontent.com/miticollo/frida-ios-dump/master/scp.entitlements'
