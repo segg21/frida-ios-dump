@@ -49,6 +49,6 @@ Python 2.x and 3.x
 
 ## Tested environment
 
-- iPhone XR with iOS 15.1b1 jailbroken using [Fugu15 Max](https://github.com/opa334/Fugu15/releases/tag/1.0.0-beta.4)
+- iPhone XR with iOS 15.1b1 jailbroken using [Fugu15 Max](https://github.com/opa334/Fugu15/releases/tag/1.0.0-beta.5)
 - [Python3](https://github.com/pyenv/pyenv)
 - Spotify
