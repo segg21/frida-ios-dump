@@ -13,7 +13,8 @@ A tool to extract a decrypted IPA from a jailbroken, **rootless** device.
    git clone --depth=1 -j8 https://github.com/miticollo/frida-ios-dump.git
    cd frida-ios-dump/
    ```
-3. Run `sudo pip install -r requirements.txt --upgrade`
+3. Run `sudo pip install -r requirements.txt --upgrade`.
+   Also, useful to upgrade `frida-tools` and `frida`.
 4. Use `iproxy` to enable SSH forwarding over USB (e.g. `iproxy -ddd 2222:22`).
 5. On the device, install `curl`, `ldid` and `openssh` from Procursus. 
    Then, run the following commands as **root** either over SSH or in a terminal window:
@@ -49,6 +50,6 @@ Python 2.x and 3.x
 
 ## Tested environment
 
-- iPhone XR with iOS 15.1b1 jailbroken using [Fugu15 Max](https://github.com/opa334/Fugu15/releases/tag/1.0.0-beta.5)
+- iPhone XR with iOS 15.1b1 jailbroken using [Fugu15 Max](https://github.com/opa334/Fugu15/releases/tag/1.0.0-beta.8)
 - [Python3](https://github.com/pyenv/pyenv)
 - Spotify
