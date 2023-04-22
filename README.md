@@ -7,6 +7,8 @@ To use frida-ios-dump, follow these steps:
 1. Install [frida](http://www.frida.re/) on your device.
    You have two options:
    - Add [my repo](https://miticollo.github.io/repos/#my).
+     > **Note**<br/>
+     > It should work on **all rootless JB**.
    - Compile it yourself.
      For more information, refer to the dedicated [gist](https://gist.github.com/miticollo/6e65b59d83b17bacc00523a0f9d41c11).
 2. <span id="clone"></span>
