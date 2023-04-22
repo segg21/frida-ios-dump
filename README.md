@@ -17,12 +17,17 @@ To use frida-ios-dump, follow these steps:
    git clone --depth=1 -j8 https://github.com/miticollo/frida-ios-dump.git
    cd frida-ios-dump/
    ```
-3. Run `sudo pip install -r requirements.txt --upgrade` to install the necessary dependencies.
+3. Create a virtual environment.
+   ```shell
+   python -m venv ./.venv
+   source ./.venv/bin/activate
+   ```
+4. Run `pip install -r requirements.txt --upgrade` to install the necessary dependencies.
    > **Note**<br/>
    > Upgrade dependencies such as `frida-tools` and `frida` using the command `sudo pip install -r requirements.txt --upgrade`.
-4. Enable SSH forwarding over USB using `iproxy`.
+5. Enable SSH forwarding over USB using `iproxy`.
    For example, run `iproxy -ddd 2222:22`.
-5. On the device, install `curl`, `ldid` and `openssh` from Procursus. 
+6. On the device, install `curl`, `ldid` and `openssh` from Procursus. 
    Then, run the following commands as **root** either over SSH or in a terminal window:
    ```shell
    curl -LO --output-dir /var/tmp/ 'https://raw.githubusercontent.com/miticollo/frida-ios-dump/master/scp.entitlements'
@@ -30,7 +35,7 @@ To use frida-ios-dump, follow these steps:
    rm -v /var/tmp/scp.entitlements
    ```
    <span><!-- https://discord.com/channels/349243932447604736/1082886572011180053/1092577566008807494 --></span>
-6. To use frida-ios-dump properly, you must have scp on your PATH. 
+7. To use frida-ios-dump properly, you must have scp on your PATH. 
    - For Debian based OS:
      ```shell
      sudo apt install -y openssh-client
@@ -40,9 +45,9 @@ To use frida-ios-dump, follow these steps:
      pacman -S openssh
      ```
    - For Windows, see [below](#windows).
-7. **Open the target app on the device.**
-8. Connect iDevice to macOS/PC using USB lightning cable.
-9. Run `./dump.py <target>`
+8. **Open the target app on the device.**
+9. Connect iDevice to macOS/PC using USB lightning cable.
+10. Run `./dump.py <target>`
 
 ```
 ./dump.py Spotify 
@@ -73,7 +78,7 @@ To install the app, sideload it as follows:
 2. Follow the instructions on the page for setting up the basic environment
 3. Run `C:\msys64\mingw64.exe` - a terminal window should pop up
 4. Execute `pacman -Suy`
-5. Execute `pacman -S git openssh python-pip`
+5. Execute `pacman -S git openssh python-pip mingw-w64-x86_64-libimobiledevice`
 6. Go to step [2](#clone)
 
 ## Tested environment
