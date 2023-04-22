@@ -16,6 +16,8 @@ To use frida-ios-dump, follow these steps:
    cd frida-ios-dump/
    ```
 3. Run `sudo pip install -r requirements.txt --upgrade` to install the necessary dependencies.
+   > **Note**<br/>
+   > Upgrade dependencies such as `frida-tools` and `frida` using the command `sudo pip install -r requirements.txt --upgrade`.
 4. Enable SSH forwarding over USB using `iproxy`.
    For example, run `iproxy -ddd 2222:22`.
 5. On the device, install `curl`, `ldid` and `openssh` from Procursus. 
@@ -39,9 +41,6 @@ To use frida-ios-dump, follow these steps:
 7. **Open the target app on the device.**
 8. Connect iDevice to macOS/PC using USB lightning cable.
 9. Run `./dump.py <target>`
-
-> **Note**<br/>
-> Upgrade dependencies such as `frida-tools` and `frida` using the command `sudo pip install -r requirements.txt --upgrade`.
 
 ```
 ./dump.py Spotify 
