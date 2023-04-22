@@ -3,8 +3,6 @@ A tool to extract a decrypted IPA from a jailbroken, **rootless** device.
 
 ## Usage
 
-For Windows, see [below](#windows).
-
 To use frida-ios-dump, follow these steps:
 1. Install [frida](http://www.frida.re/) on your device.
    You have two options:
@@ -24,7 +22,7 @@ To use frida-ios-dump, follow these steps:
    python -m venv ./.venv
    source ./.venv/bin/activate
    ```
-4. Run `pip install -r requirements.txt --upgrade` to install the necessary dependencies.
+   4. Run `pip install -r requirements.txt --upgrade` to install the necessary dependencies.
    > **Note**<br/>
    > Upgrade dependencies such as `frida-tools` and `frida` using the command `sudo pip install -r requirements.txt --upgrade`.
 5. Enable SSH forwarding over USB using `iproxy`.
@@ -37,18 +35,9 @@ To use frida-ios-dump, follow these steps:
    rm -v /var/tmp/scp.entitlements
    ```
    <span><!-- https://discord.com/channels/349243932447604736/1082886572011180053/1092577566008807494 --></span>
-7. To use frida-ios-dump properly, you must have scp on your PATH. 
-   - For Debian based OS:
-     ```shell
-     sudo apt install -y openssh-client
-     ```
-   - For Arch based OS:
-     ```shell
-     pacman -S openssh
-     ```
-8. **Open the target app on the device.**
-9. Connect iDevice to macOS/PC using USB lightning cable.
-10. Run `./dump.py <target>`
+7. **Open the target app on the device.**
+8. Connect iDevice to macOS/PC using USB lightning cable.
+9. Run `./dump.py <target>`
 
 ```
 ./dump.py Spotify 
@@ -72,15 +61,6 @@ To install the app, sideload it as follows:
   ![sideloadly.png](screenshots/sideloadly.png)
   > **Note**<br/>
   > Enable “Sideload Spoofer” as some apps may not work after decryption.
-
-## Windows
-
-1. Go to http://www.msys2.org/ and download the x86_64 installer
-2. Follow the instructions on the page for setting up the basic environment
-3. Run `C:\msys64\mingw64.exe` - a terminal window should pop up
-4. Execute `pacman -Suy`
-5. Execute `pacman -S git openssh python-pip mingw-w64-x86_64-libimobiledevice`
-6. Go to step [2](#clone)
 
 ## Tested environment
 
