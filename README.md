@@ -22,7 +22,7 @@ To use frida-ios-dump, follow these steps:
    python -m venv ./.venv
    source ./.venv/bin/activate
    ```
-   4. Run `pip install -r requirements.txt --upgrade` to install the necessary dependencies.
+4. Run `pip install -r requirements.txt --upgrade` to install the necessary dependencies.
    > **Note**<br/>
    > Upgrade dependencies such as `frida-tools` and `frida` using the command `sudo pip install -r requirements.txt --upgrade`.
 5. Enable SSH forwarding over USB using `iproxy`.
