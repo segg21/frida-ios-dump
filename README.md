@@ -3,6 +3,8 @@ A tool to extract a decrypted IPA from a jailbroken, **rootless** device.
 
 ## Usage
 
+For Windows, see [below](#windows).
+
 To use frida-ios-dump, follow these steps:
 1. Install [frida](http://www.frida.re/) on your device.
    You have two options:
@@ -44,7 +46,6 @@ To use frida-ios-dump, follow these steps:
      ```shell
      pacman -S openssh
      ```
-   - For Windows, see [below](#windows).
 8. **Open the target app on the device.**
 9. Connect iDevice to macOS/PC using USB lightning cable.
 10. Run `./dump.py <target>`
