@@ -66,16 +66,6 @@ To install the app, sideload it as follows:
   > **Note**<br/>
   > Enable “Sideload Spoofer” as some apps may not work after decryption.
 
-## Support
-
-Python 2.x and 3.x
-
-## Tested environment
-
-- iPhone XR with iOS 15.1b1 jailbroken using [Dopamine](https://github.com/opa334/Fugu15/releases/tag/1.0.0-beta.8)
-- [Python3](https://github.com/pyenv/pyenv)
-- Spotify
-
 ## Windows
 
 1. Go to http://www.msys2.org/ and download the x86_64 installer
@@ -84,3 +74,8 @@ Python 2.x and 3.x
 4. Execute `pacman -Suy`
 5. Execute `pacman -S git openssh python-pip`
 6. Go to step [2](#clone)
+
+## Tested environment
+
+- iPhone XR with iOS 15.1b1 jailbroken using [Dopamine](https://github.com/opa334/Fugu15/releases/tag/1.0.0-beta.8)
+- [Python3](https://github.com/pyenv/pyenv)
